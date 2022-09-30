@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
+
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         rb.MovePosition(transform.position + direction.normalized * speed * Time.deltaTime);
