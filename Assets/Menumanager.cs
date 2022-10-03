@@ -14,13 +14,14 @@ public class Menumanager : MonoBehaviour
         Instace = this;    
     }
 
+    //하나의 메뉴만 띄우고 전부 끄는 역활
     public void OpenMenu(string _menuName)
     {
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].MenuName == _menuName)
             {
-                OpenMenu(menus[i]);
+                menus[i].OpenMenu();
             }
             else if (menus[i].IsOpen)
             {
@@ -28,6 +29,8 @@ public class Menumanager : MonoBehaviour
             }
         }
     }
+
+    //하나의 메뉴만 띄움
     public void OpenMenu(Menu _menu)
     {
         for(int i=0; i<menus.Length; i++)

@@ -12,6 +12,7 @@ public class Menu : MonoBehaviour
         IsOpen = true;
         gameObject.SetActive(true);
     }
+
     public void CloseMenu()
     {
         IsOpen = false;
