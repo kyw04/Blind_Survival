@@ -8,19 +8,19 @@ using System;
 
 public class PlayerInfoItem : MonoBehaviourPunCallbacks
 {
-    [SerializeField] TextMeshProUGUI _playerNickName; 
+    [SerializeField] TextMeshProUGUI _playerNickName;
 
     //포톤에서 제공하는 Player 클래스 닉네임 접속방정보 아이디 등 제공함
-    Player playerInfo;
+    Photon.Realtime.Player playerInfo;
 
-    public void SetUp(Player _setPlayer)
+    public void SetUp(Photon.Realtime.Player _setPlayer)
     {
         playerInfo = _setPlayer;
         _playerNickName.text = _setPlayer.NickName;
     }
 
     //플레이어 또는 플레이어외 나갔을때 호출되는 됩니다.
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         if(playerInfo == otherPlayer)
         {
