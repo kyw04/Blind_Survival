@@ -48,6 +48,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         DebugText.text = "Try Connect To Server..";
         PhotonNetwork.ConnectUsingSettings();
     }
+    
     //서버에 성공적으로 연결되었을대 호출되는 콜백 메소드 입니다
     public override void OnConnectedToMaster()
     {
@@ -88,7 +89,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         RoomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
         //임시 값을 저장
-        Player[] players = PhotonNetwork.PlayerList;
+        Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
 
         foreach (Transform _child in playerListContent)
         {
@@ -105,7 +106,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
     //만약 방장이 호스트를 떠나면 다른 남은 유저가 호스트를 맡게됨
-    public override void OnMasterClientSwitched(Player newMasterClient)
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
@@ -161,7 +162,7 @@ public class PhotonLauncher : MonoBehaviourPunCallbacks
     /// 플레이어가 방에 입장한 경우 호출
     /// </summary>
     /// <param name="newPlayer"></param>
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Debug.Log($"방입장 {newPlayer.NickName}");
         //방에 입장시 정보를 셋팅합니다.
