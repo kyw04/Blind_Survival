@@ -35,6 +35,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
     {
         //로비 타이틀 끄기
         TitleUI.SetActive(false);
+        Spwan(); //방에 접속하면 스폰시킴
     }
     private void Update()
     {
@@ -44,6 +45,12 @@ public class ServerManager : MonoBehaviourPunCallbacks
             PhotonNetwork.Disconnect();
         }
 
+    }
+    //소환
+    public void Spwan()
+    {
+        //리소스 폴더안에 있는 이름으로 정의해야함
+        PhotonNetwork.Instantiate("Player",Vector3.zero,Quaternion.identity);
     }
     //연결호출 콜백
     public override void OnDisconnected(DisconnectCause cause)

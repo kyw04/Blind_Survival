@@ -1,13 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Player : MonoBehaviour
+using Photon.Pun;
+using TMPro;
+using UnityEngine.UI;
+public class Player : MonoBehaviourPunCallbacks , IPunObservable
 {
+    public Slider myHealth;
+    public TextMeshProUGUI NickNametext;
+    public PhotonView myPhtonView;
     private Camera mainCamera;
     private Rigidbody rb;
     public float speed;
 
+    private void Awake()
+    {
+        NickNametext.text = myPhtonView.IsMine ? PhotonNetwork.NickName : myPhtonView.Owner.NickName;
+        NickNametext.color = myPhtonView.IsMine ? Color.green : Color.red;
+    }
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -16,21 +26,31 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
-
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-        rb.MovePosition(transform.position + direction.normalized * speed * Time.deltaTime);
-
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit raycastHit;
-
-        if (Physics.Raycast(ray, out raycastHit))
+        //나인경우에만 움직임 컨트롤
+        if (myPhtonView.IsMine)
         {
-            Vector3 _position = raycastHit.point;
-            _position.y = transform.position.y;
+            mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
 
-            transform.LookAt(_position);
+            Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+            rb.MovePosition(transform.position + direction.normalized * speed * Time.deltaTime);
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit raycastHit;
+
+            if (Physics.Raycast(ray, out raycastHit))
+            {
+                Vector3 _position = raycastHit.point;
+                _position.y = transform.position.y;
+
+                transform.LookAt(_position);
+            }
         }
+    }
+
+    //포톤에서 제공하는 변수 동기화 인터페이스
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        //throw new System.NotImplementedException();
     }
 }
