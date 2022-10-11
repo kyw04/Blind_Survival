@@ -536,10 +536,10 @@ GameObject:
   m_Component:
   - component: {fileID: 79612369031928847}
   - component: {fileID: 6339656311728096885}
-  - component: {fileID: 8034302993956689844}
-  - component: {fileID: 367854598176709479}
-  - component: {fileID: 5664757919339230656}
   - component: {fileID: 5948446444994335635}
+  - component: {fileID: 8034302993956689844}
+  - component: {fileID: 5664757919339230656}
+  - component: {fileID: 5139560289464959298}
   - component: {fileID: 643626927}
   - component: {fileID: 643626926}
   - component: {fileID: 643626925}
@@ -591,6 +591,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &5948446444994335635
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743383846750275253}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!54 &8034302993956689844
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -607,22 +620,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &367854598176709479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743383846750275253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe08d751cc7cbc479515230a190d127, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myHealth: {fileID: 3336798578549097154}
-  NickNametext: {fileID: 4315305069851582843}
-  myPhtonView: {fileID: 643626927}
-  speed: 10
 --- !u!114 &5664757919339230656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,19 +637,23 @@ MonoBehaviour:
   meshResolution: 0.15
   viewMeshFilter: {fileID: 1050215981}
   edgeResolveIterations: 10
---- !u!65 &5948446444994335635
-BoxCollider:
+--- !u!114 &5139560289464959298
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743383846750275253}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ee701b8f71dfc4a963365dfb6dcb22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHealth: {fileID: 3336798578549097154}
+  NickNametext: {fileID: 4315305069851582843}
+  myPhtonView: {fileID: 643626927}
+  myAnimator: {fileID: 6339656311728096885}
+  speed: 0
 --- !u!114 &643626927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -672,7 +673,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 367854598176709479}
+  - {fileID: 5139560289464959298}
   - {fileID: 643626926}
   - {fileID: 643626925}
   sceneViewId: 0
