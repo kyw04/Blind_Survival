@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
 {
-    public Slider myHealth;
+
     public TextMeshProUGUI NickNametext;
     public PhotonView myPhtonView;
     public Animator myAnimator;
@@ -14,9 +14,10 @@ public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
     private Rigidbody rb;
     public float speed;
 
+    Vector3 curPos;
+
     private void Awake()
     {
-
         NickNametext.text = myPhtonView.IsMine ? PhotonNetwork.NickName : myPhtonView.Owner.NickName;
         NickNametext.color = myPhtonView.IsMine ? Color.green : Color.red;
     }
@@ -54,6 +55,14 @@ public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
     //포톤에서 제공하는 변수 동기화 인터페이스
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //throw new System.NotImplementedException();
+        if(stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+        }
+        else
+        {
+            curPos = (Vector3)stream.ReceiveNext();
+
+        }
     }
 }

@@ -7,7 +7,7 @@ public class WeaponManager : MonoBehaviour
 {
     public GameObject EqupitWeapon; //내가 장착한 무기
     public Transform WeaponHoldPos; //총이 쥐어지는 위치
-    private GameObject startingWeapon; //처음 시작무기
+    public GameObject startingWeapon; //처음 시작무기
 
 
     private void OnEnable()
@@ -31,7 +31,12 @@ public class WeaponManager : MonoBehaviour
     {
         if(Input.GetMouseButton(0)&& EqupitWeapon !=null)
         {
-            
+            EqupitWeapon.GetComponent<Pistol>().Fire();
+        }
+        //재장전
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            EqupitWeapon.GetComponent<Pistol>().Reloading();
         }
     }
 }
