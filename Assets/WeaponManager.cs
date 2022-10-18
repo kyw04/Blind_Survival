@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class WeaponManager : MonoBehaviour
 {
     public GameObject EqupitWeapon; //내가 장착한 무기
@@ -10,7 +11,7 @@ public class WeaponManager : MonoBehaviour
     public GameObject startingWeapon; //처음 시작무기
 
 
-    private void OnEnable()
+    private void OnEnable() 
     {
         if (startingWeapon != null)
             EqupitGun(startingWeapon.gameObject);
@@ -29,9 +30,10 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0)&& EqupitWeapon !=null)
+
+        if(Input.GetMouseButtonDown(0)&& EqupitWeapon !=null)
         {
-            EqupitWeapon.GetComponent<Pistol>().Fire();
+            EqupitWeapon.GetComponent<Pistol>().GunFire();
         }
         //재장전
         if (Input.GetKeyDown(KeyCode.R))

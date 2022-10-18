@@ -10,9 +10,10 @@ public enum GunState
 }
 public class Pistol : MonoBehaviourPunCallbacks
 {
+    public PhotonView pv;
     public GunState _GunState { get; set; }
     //총알
-    public m_Bullet BulletObj;
+    public GameObject BulletObj;
     //총구
     public Transform GunFirePos;
 
@@ -26,36 +27,47 @@ public class Pistol : MonoBehaviourPunCallbacks
     public int ReloadTime; //재장전시간
 
     public float shotDelayTime; //연사속도 (지연시간)
-    public float msBetweebshots; //지연시간
+
 
     private void OnEnable()
     {
         //게임이 실행되면 초기화시
+        shotDelayTime = 0.15f;
         Magazine = 10;
         HoldingBullets = 30;
         CurrentBullet = Magazine;
         _GunState = GunState.Ready;
+
+    }
+    private void Start()
+    {
+        pv = GetComponentInParent<PhotonView>();
+    }
+    //WaponManager에서 실행
+    public void GunFire()
+    {
+        Debug.Log("클릭");
+        Fire();
+        pv.RPC("Fire", RpcTarget.Others, null);
     }
 
-    public void Fire()
+    [PunRPC]
+    private void Fire()
     {
         //총발사 구현
         if (_GunState == GunState.Ready)
         {
-            msBetweebshots += Time.deltaTime;
-            //플레이시간 
-            if (msBetweebshots >= shotDelayTime)
-            {
-                StartCoroutine(ShotCoroutine());
-                msBetweebshots = 0;
-            }
+            StartCoroutine(ShotCoroutine());
+
         }
     }
     IEnumerator ShotCoroutine()
     {
-         yield return new WaitForSeconds(0.15f);
+         yield return new WaitForSeconds(shotDelayTime);
 
-        PhotonNetwork.Instantiate("Bullet", GunFirePos.position, GunFirePos.rotation).GetComponent<PhotonView>().RPC("SetSpeed", RpcTarget.All, BulletPower);
+        Debug.Log("코루틴 들어옴");
+        //PhotonNetwork.Instantiate("Bullet", GunFirePos.position, GunFirePos.rotation).GetComponent<PhotonView>().RPC("SetSpeed", RpcTarget.All, BulletPower);
+        GameObject bullet = Instantiate(BulletObj, GunFirePos.position, GunFirePos.rotation);
 
         CurrentBullet--;
         if (CurrentBullet <= 0) //총알이 0이냐 
@@ -63,6 +75,7 @@ public class Pistol : MonoBehaviourPunCallbacks
             _GunState = GunState.Empty;
         }
     }
+
     public void Reloading()
     {
         if (HoldingBullets <= 0 || CurrentBullet >= Magazine)
