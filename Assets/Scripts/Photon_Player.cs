@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun.UtilityScripts;
+
 public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
 {
     [SerializeField] PhotonView _myPhtonView;
@@ -12,10 +14,12 @@ public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
     [SerializeField] Camera _myMainCamera;
     [SerializeField] Rigidbody _myRigidboy;
 
+    public CharectorHealth _myCharectorHealth;
     public float speed;
 
     Vector3 curPos;
-
+    Quaternion curRot;
+    public float Damping = 10f;
     //초기화 메소드
     public void Init()
     {
@@ -38,19 +42,29 @@ public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
         //나인경우에만 움직임 컨트롤
         if (_myPhtonView.IsMine)
         {
-            Movements();
+            Move();
+            Turn();
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * Damping);
+            transform.rotation = Quaternion.Slerp(transform.rotation, curRot, Time.deltaTime * Damping);
         }
     }
-
-    //플레이어 회전
-    public void Movements()
+    private void Move()
     {
-        _myMainCamera.transform.position = new Vector3(transform.position.x, _myMainCamera.transform.position.y, transform.position.z);
-
         Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
+       
         _myRigidboy.MovePosition(transform.position + direction.normalized * speed * Time.deltaTime);
+
+
         _myAnimator.SetBool("IsWalk", direction != Vector3.zero);
+    }
+    //플레이어 회전
+    public void Turn()
+    {
+        _myMainCamera.transform.position = new Vector3(transform.position.x, _myMainCamera.transform.position.y, transform.position.z);
 
         Ray ray = _myMainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
@@ -70,11 +84,14 @@ public class Photon_Player : MonoBehaviourPunCallbacks , IPunObservable
         if(stream.IsWriting)
         {
             stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+           // stream.SendNext(_myCharectorHealth.myHealth.value);
         }
         else
         {
             curPos = (Vector3)stream.ReceiveNext();
-
+            curRot = (Quaternion)stream.ReceiveNext();
+           // _myCharectorHealth.myHealth.value = (float)stream.ReceiveNext();
         }
     }
 }

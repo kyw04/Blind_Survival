@@ -6,17 +6,28 @@ using Photon.Realtime;
 
 public class m_Bullet : MonoBehaviourPunCallbacks
 {
-    
     //총알 속도
-    public int bulletPower { get; private set; }
+
+    //총 데미지
+    public int Damage = 10;
 
     private void Start()
     {
+ 
         GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * 1000f);
         Destroy(this.gameObject, 3.0f);
     }
 
-
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            col.gameObject.GetComponent<CharectorHealth>().Hit(Damage);
+        }
+        
+        //부딧치면 삭제함
+        Destroy(this.gameObject);
+    }
     /*
     private void Update()
     {

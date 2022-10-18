@@ -17,6 +17,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
     
     public GameObject TitleUI;
 
+    //스폰 포인트 
     //게임 실행시 바로 접속하게함
     private void Awake()
     {
@@ -86,7 +87,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected)
         {
-            //연결해제
+            //연결해제 제대로 해제가안되서 아직 버그가 있음
             PhotonNetwork.Disconnect();
         }
 
@@ -94,8 +95,12 @@ public class ServerManager : MonoBehaviourPunCallbacks
     //소환
     public void Spwan()
     {
+        //랜덤한 위치 
+        Transform[] points = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
+        int idx = UnityEngine.Random.Range(0,points.Length);
+
         //리소스 폴더안에 있는 이름으로 정의해야함
-        PhotonNetwork.Instantiate("Player",Vector3.zero,Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation,0);
     }
 
     //연결호출 콜백

@@ -1,24 +1,32 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class CharectorHealth : MonoBehaviourPunCallbacks
+public class CharectorHealth : MonoBehaviour
 {
-    public PhotonView myPhotonView;
+    public PhotonView pv;
     public Slider myHealth;
 
+    private int _myHp = 100; //초기 채력
+    private void Awake()
+    {
+        myHealth.value = _myHp;
+    }
 
     public void Hit(int _damage)
     {
         myHealth.value -= _damage;
-        if(myHealth.value <=0)
+        if (myHealth.value <= 0)
         {
-            Debug.Log("죽음");
-            myPhotonView.RPC("DestroyRPC", RpcTarget.AllBuffered);
+            pv.RPC("DestroyRPC", RpcTarget.AllBuffered);
         }
     }
+
     [PunRPC]
-    void DestroyRPC() => Destroy(gameObject);
+    void DestroyRPC()
+    {
+         Destroy(this.gameObject);       
+    }
+
 }
