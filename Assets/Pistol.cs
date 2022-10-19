@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,15 +10,15 @@ public enum GunState
 }
 public class Pistol : MonoBehaviour
 {
+    public PhotonView _pv;
     public GunState _GunState { get; set; }
     //총알
-    public m_Bullet BulletObj;
+    public GameObject BulletObj;
     //총구
     public Transform GunFirePos;
 
-    //총 데미지
-    public int Damage; 
-
+    public AudioSource _myGunSound;
+    public AudioClip _SoundClip;
     public int Magazine;//탄창 사이즈
     public int HoldingBullets; //예비 총알 들고있는거
     public int CurrentBullet; //현재 총알 총에 장전되있는거
@@ -25,54 +26,57 @@ public class Pistol : MonoBehaviour
     public int ReloadTime; //재장전시간
 
     public float shotDelayTime; //연사속도 (지연시간)
-    public float msBetweebshots; //지연시간
+
 
     private void OnEnable()
     {
         //게임이 실행되면 초기화시
+        shotDelayTime = 0.15f;
         Magazine = 10;
         HoldingBullets = 30;
         CurrentBullet = Magazine;
         _GunState = GunState.Ready;
     }
+
     private void Update()
     {
-        //총발사 구현
-        if (Input.GetButtonDown("Fire1")&& _GunState == GunState.Ready)
+        if(_pv.IsMine && Input.GetMouseButtonDown(0))
         {
-            //플레이시간 
-            if(Time.time> shotDelayTime)
-            {                                 
-                shotDelayTime = Time.time + msBetweebshots / 1000f;
-                Debug.Log("총알 발사");
-
-                //총알 생성 
-                m_Bullet _Bullet = Instantiate(BulletObj, GunFirePos.position, GunFirePos.rotation);
-                _Bullet.SetSpeed(BulletPower);
-
-                //5초뒤에 생성한 총알 삭제
-                Destroy(_Bullet.gameObject, 5f);
-
-                CurrentBullet--;
-                if(CurrentBullet <=0) //총알이 0이냐 
-                {
-                    _GunState = GunState.Empty;
-                }
-            }
+            _pv.RPC("WaponFire", RpcTarget.All);
         }
-
-        //재장전
-        if(Input.GetKeyDown(KeyCode.R))
+        else if(_pv.IsMine && Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("재장전");
-            //남은 총알이 0인경우  그리고 장전되있는 총알이 탄창 사이즈랑 같거나 더 많은경우 재장전 안되게함
-            if(HoldingBullets <=0 || CurrentBullet>= Magazine)
-            {
-                return;
-            }
-            StartCoroutine(Reloaded());
+            _pv.RPC("Reloading", RpcTarget.All);
         }
     }
+    [PunRPC]
+    private void WaponFire()
+    {
+        //총발사 구현
+        if (_GunState == GunState.Ready)
+        {
+            _myGunSound.PlayOneShot(_SoundClip);
+
+            //PhotonNetwork.Instantiate("Bullet", GunFirePos.position, GunFirePos.rotation).GetComponent<PhotonView>().RPC("SetSpeed", RpcTarget.All, BulletPower);
+            Instantiate(BulletObj, GunFirePos.position, GunFirePos.rotation);
+
+            CurrentBullet--;
+            if (CurrentBullet <= 0) //총알이 0이냐 
+            {
+                _GunState = GunState.Empty;
+            }
+        }
+    }
+    [PunRPC]
+    public void Reloading()
+    {
+        if (HoldingBullets <= 0 || CurrentBullet >= Magazine)
+        {
+            return;
+        }
+        StartCoroutine(Reloaded());
+    }
+
     IEnumerator Reloaded()
     {
         //상태 변경
@@ -87,8 +91,6 @@ public class Pistol : MonoBehaviour
         HoldingBullets = HoldingBullets - Magazine;
         //상태 변경
         _GunState = GunState.Ready;
-
-
     }
 
 }
