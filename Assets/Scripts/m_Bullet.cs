@@ -4,30 +4,41 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class m_Bullet : MonoBehaviourPunCallbacks
+public class m_Bullet : MonoBehaviourPun
 {
+    public PhotonView pv;
     //醚舅 加档
-
+    public int BulletSpeed;
     //醚 单固瘤
-    public int Damage = 10;
+    public int Damage = 50;
+    public int dir;
+    public Rigidbody rb;
+
+    Vector3 curPos;
+    Quaternion curRot;
+    private float Damping = 10f;
 
     private void Start()
     {
- 
-        GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * 1000f);
-        Destroy(this.gameObject, 3.0f);
+        GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward * BulletSpeed * dir);
+        Destroy(this.gameObject, 5.0f);
+    }
+    private void Update()
+    {
+        //transform.Translate(Vector3.forward * BulletSpeed * Time.deltaTime * dir);
+    }
+    private void OnTriggerEnter(Collider col)
+    {
+
+        if(!photonView.IsMine && col.tag =="Player" && col.GetComponent<PhotonView>().IsMine)
+        {
+            Debug.Log($"{col.gameObject.name}何调魔");
+            col.GetComponent<CharectorHealth>().OnDamage(Damage);
+        }
     }
 
-    private void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.tag == "Player")
-        {
-            col.gameObject.GetComponent<CharectorHealth>().Hit(Damage);
-        }
-        
-        //何调摹搁 昏力窃
-        Destroy(this.gameObject);
-    }
+
+
     /*
     private void Update()
     {

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3748341164908069515}
-  - component: {fileID: 803314812007604696}
+  - component: {fileID: 611588335790083053}
   - component: {fileID: -2367968495815687703}
   - component: {fileID: 6118740464264937798}
   m_Layer: 0
@@ -42,7 +42,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &803314812007604696
+--- !u!114 &611588335790083053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,7 +60,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -2367968495815687703}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -76,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7672ac510afc454789c712260e0a4ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myPv: {fileID: 0}
+  _pv: {fileID: 0}
   BulletObj: {fileID: 829471107013400238, guid: 4bbffbee97a03b5488058c06897d02f9, type: 3}
   GunFirePos: {fileID: 1978755981410618821}
   _myGunSound: {fileID: 6118740464264937798}
